@@ -1,6 +1,7 @@
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import StreamingResponse
 from sqlmodel import Session
 
 from ayomi.dependencies import get_session
@@ -25,3 +26,11 @@ def evaluate(
 @router.get("/", response_model=list[RPNRecord])
 def get_all(*, session: Session = Depends(get_session)) -> Any:
     return RPNManager.get_all(session=session)
+
+
+@router.get("/csv", response_class=StreamingResponse)
+def get_csv(*, session: Session = Depends(get_session)) -> Any:
+    stream = RPNManager.yield_csv_data(session=session)
+    response = StreamingResponse(iter(stream), media_type="text/csv")
+    response.headers["Content-Disposition"] = "attachment; filename=rpn_records.csv"
+    return response

@@ -1,5 +1,5 @@
 import operator
-from typing import Sequence
+from typing import Iterator, Sequence
 
 from sqlmodel import Session, select
 
@@ -23,6 +23,14 @@ class RPNManager:
     @staticmethod
     def get_all(session: Session) -> Sequence[RPNRecord]:
         return session.exec(select(RPNRecord)).all()
+
+    @staticmethod
+    def yield_csv_data(session: Session) -> Iterator[str]:
+        records = session.exec(select(RPNRecord))
+        headers = ",".join(RPNRecord.model_fields.keys())
+        yield f"{headers}\n"
+        for record in records:
+            yield f"{record.csv}\n"
 
 
 class ReversePolishNotationError(Exception):
