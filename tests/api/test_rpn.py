@@ -20,5 +20,5 @@ def test_evaluate_rpn(client: TestClient) -> None:
     data = response.json()
 
     assert response.status_code == status.HTTP_200_OK
-    assert data["elements"] == json_data["elements"]
+    assert data["elements"] == " ".join(json_data["elements"])
     assert data["result"] == 3

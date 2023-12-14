@@ -9,6 +9,9 @@ readme = "README.md"
 python = "^3.11"
 fastapi = "^0.105.0"
 uvicorn = "^0.24.0.post1"
+sqlmodel = "^0.0.14"
+pydantic-settings = "^2.1.0"
+psycopg2-binary = "^2.9.9"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.7"
@@ -29,6 +32,9 @@ select = [
     "C",  # flake8-comprehensions
     "B",  # flake8-bugbear
 ]
+
+[tool.ruff.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends"]
 
 [tool.mypy]
 strict = true

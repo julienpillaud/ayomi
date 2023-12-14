@@ -1,9 +1,11 @@
-from pydantic import BaseModel
+from sqlmodel import Field, SQLModel
 
 
-class RPNRequest(BaseModel):
+class RPNRequest(SQLModel):
     elements: list[str]
 
 
-class RPNResponse(RPNRequest):
+class RPNRecord(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    elements: str
     result: float
