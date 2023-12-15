@@ -11,7 +11,7 @@ from ayomi.use_cases.rpn import RPNManager
 router = APIRouter(prefix="/rpn", tags=["rpn"])
 
 
-@router.post("/", response_model=RPNRecord)
+@router.post("/", response_model=RPNRecord, summary="Evaluate the RPN result")
 def evaluate(
     *, session: Session = Depends(get_session), rpi_request: RPNRequest
 ) -> Any:
@@ -23,12 +23,18 @@ def evaluate(
     return result
 
 
-@router.get("/", response_model=list[RPNRecord])
-def get_all(*, session: Session = Depends(get_session)) -> Any:
-    return RPNManager.get_all(session=session)
+@router.get(
+    "/", response_model=list[RPNRecord], summary="Get records according to filter"
+)
+def get(
+    *, session: Session = Depends(get_session), offset: int = 0, limit: int = 100
+) -> Any:
+    return RPNManager.get(session=session, offset=offset, limit=limit)
 
 
-@router.get("/csv", response_class=StreamingResponse)
+@router.get(
+    "/csv", response_class=StreamingResponse, summary="Download csv file of records"
+)
 def get_csv(*, session: Session = Depends(get_session)) -> Any:
     stream = RPNManager.yield_csv_data(session=session)
     response = StreamingResponse(iter(stream), media_type="text/csv")

@@ -27,6 +27,20 @@ def test_evaluate_rpn(client: TestClient) -> None:
     assert data["result"] == 3
 
 
+def test_get(session: Session, client: TestClient) -> None:
+    record_1 = RPNRecord(elements="1 2 +", result=3)
+    record_2 = RPNRecord(elements="1 2 -", result=-1)
+    session.add(record_1)
+    session.add(record_2)
+    session.commit()
+
+    response = client.get("/rpn")
+    data = response.json()
+
+    assert response.status_code == status.HTTP_200_OK
+    assert len(data) == 2
+
+
 def test_get_csv(session: Session, client: TestClient) -> None:
     record = RPNRecord(elements="1 2 +", result=3)
     session.add(record)

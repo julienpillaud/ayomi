@@ -21,8 +21,8 @@ class RPNManager:
         return db_obj
 
     @staticmethod
-    def get_all(session: Session) -> Sequence[RPNRecord]:
-        return session.exec(select(RPNRecord)).all()
+    def get(session: Session, offset: int = 0, limit: int = 100) -> Sequence[RPNRecord]:
+        return session.exec(select(RPNRecord).offset(offset).limit(limit)).all()
 
     @staticmethod
     def yield_csv_data(session: Session) -> Iterator[str]:
