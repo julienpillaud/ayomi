@@ -1,0 +1,22 @@
+services:
+
+  api:
+    container_name: "api"
+    build: .
+    depends_on:
+      - db
+    env_file:
+      - ".env"
+    ports:
+      - "8000:8000"
+
+  db:
+    container_name: "db"
+    image: postgres:16
+    env_file:
+      - ".env"
+    volumes:
+      - "postgres_data:/var/lib/postgresql/data/"
+
+volumes:
+    postgres_data:
